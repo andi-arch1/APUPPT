@@ -106,7 +106,7 @@ def get_day_color(day):
     else:
         return "#D32F2F"  # merah tua
 
-# ==== Render kalender berwarna + tanda hari ini ====
+# ==== Render kalender berwarna + border biru di hari ini ====
 st.markdown("### 🗓️ Calendar View")
 today_date = datetime.today().date()
 
@@ -120,27 +120,26 @@ for week in days:
             current_date = datetime(year, month, day).date()
             is_today = current_date == today_date
 
-            # 🔵 Tambahkan indikator titik biru di bawah angka kalau hari ini
-            indicator = "<div style='font-size:10px; color:#2196F3; margin-top:2px;'>●</div>" if is_today else ""
+            # 🟦 Border biru tebal untuk hari ini
+            border = "3px solid #2196F3" if is_today else "1px solid #555"
 
             cols[i].markdown(
                 f"""
                 <div style='
                     background-color:{color};
-                    border:1px solid #555;
+                    border:{border};
                     border-radius:8px;
                     padding:10px;
                     text-align:center;
                     color:white;
                     font-weight:600;
+                    box-shadow:{'0 0 10px #2196F3' if is_today else 'none'};
                 '>
                     {day}
-                    {indicator}
                 </div>
                 """,
                 unsafe_allow_html=True
             )
-
 
 # Tambah legenda warna di bawah kalender
 st.markdown("""
