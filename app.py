@@ -209,7 +209,7 @@ with st.form("add_incidental_form"):
         <p><b>Deadline:</b> {selected_deadline.strftime('%Y-%m-%d')}</p>
         <p>This report has been added by user on {datetime.now().strftime('%Y-%m-%d')}.</p>
         """
-        send_email_notification(receiver, subject, body)
+        send_email(receiver, subject, body)
         # === =============================
     
         st.success(f"✅ {selected_report} added for {selected_deadline.strftime('%B %Y')}!")
