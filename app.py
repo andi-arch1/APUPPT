@@ -93,16 +93,9 @@ df_current = merge_reports(month, year)
 def get_day_color(day):
     """Tentukan warna berdasarkan status report pada tanggal itu"""
     if day == 0:
-        return None
-
-    today_date = datetime.today().date()
-    current_day = datetime(year, month, day).date()
+        return No
     day_str = f"{year}-{month:02d}-{day:02d}"
     reports_today = df_current[df_current["Deadline"] == day_str]
-
-    # 🌟 Jika hari ini, tampilkan biru terang
-    if current_day == today_date:
-        return "#1976D2"  # biru terang untuk current date
 
     if len(reports_today) == 0:
         return "#2C2C2C"  # abu tua (tidak ada report)
@@ -113,8 +106,10 @@ def get_day_color(day):
     else:
         return "#D32F2F"  # merah tua
 
-# Render kalender berwarna
+# ==== Render kalender berwarna + tanda hari ini ====
 st.markdown("### 🗓️ Calendar View")
+today_date = datetime.today().date()
+
 for week in days:
     cols = st.columns(7)
     for i, day in enumerate(week):
@@ -122,6 +117,12 @@ for week in days:
             cols[i].empty()
         else:
             color = get_day_color(day)
+            current_date = datetime(year, month, day).date()
+            is_today = current_date == today_date
+
+            # 🔵 Tambahkan indikator titik biru di bawah angka kalau hari ini
+            indicator = "<div style='font-size:10px; color:#2196F3; margin-top:2px;'>●</div>" if is_today else ""
+
             cols[i].markdown(
                 f"""
                 <div style='
@@ -134,15 +135,16 @@ for week in days:
                     font-weight:600;
                 '>
                     {day}
+                    {indicator}
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
+
 # Tambah legenda warna di bawah kalender
 st.markdown("""
 <div style='display:flex; gap:15px; margin-top:10px'>
-  <div style='background-color:#1976D2; width:20px; height:20px; border-radius:4px; display:inline-block'></div> Today
   <div style='background-color:#D32F2F; width:20px; height:20px; border-radius:4px; display:inline-block'></div> Not Started
   <div style='background-color:#FBC02D; width:20px; height:20px; border-radius:4px; display:inline-block'></div> In Progress
   <div style='background-color:#388E3C; width:20px; height:20px; border-radius:4px; display:inline-block'></div> Completed
