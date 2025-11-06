@@ -1,24 +1,27 @@
 import smtplib
 import os
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
 
 load_dotenv()
 
-def send_email_notification(receiver_email, subject, body):
-    sender_email = os.getenv("EMAIL_SENDER")
-    sender_password = os.getenv("EMAIL_PASSWORD")
+EMAIL_USER = os.getenv("EMAIL_USER")
+EMAIL_PASS = os.getenv("EMAIL_PASS")
 
-    msg = MIMEText(body, "html")
+def send_email(recipient, subject, body):
+    msg = MIMEMultipart()
+    msg["From"] = EMAIL_USER
+    msg["To"] = recipient
     msg["Subject"] = subject
-    msg["From"] = sender_email
-    msg["To"] = receiver_email
+
+    msg.attach(MIMEText(body, "plain"))
 
     try:
-        with smtplib.SMTP(os.getenv("SMTP_SERVER"), int(os.getenv("SMTP_PORT"))) as server:
-            server.starttls()
-            server.login(sender_email, sender_password)
-            server.send_message(msg)
-        print(f"✅ Email sent to {receiver_email}")
+        # pakai SSL
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(EMAIL_USER, EMAIL_PASS)
+            server.sendmail(EMAIL_USER, recipient, msg.as_string())
+            print("✅ Email sent successfully")
     except Exception as e:
-        print(f"❌ Failed to send email: {e}")
+        print("❌ Failed to send email:", e)
