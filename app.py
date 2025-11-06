@@ -165,6 +165,7 @@ if st.button("💾 Save Changes"):
     df_to_save = pd.concat([df_status, edited_df]).drop_duplicates(subset=["Report Name", "Deadline"], keep="last")
     df_to_save.to_csv(STATUS_PATH, index=False)
     st.success("Changes saved successfully!")
+    st.rerun()
 
 # ==== Form Tambah Incidental Report ====
 st.markdown("---")
@@ -189,4 +190,4 @@ with st.form("add_incidental_form"):
         df_status = pd.concat([df_status, new_entry], ignore_index=True)
         df_status.to_csv(STATUS_PATH, index=False)
         st.success(f"✅ {selected_report} added for {selected_deadline.strftime('%B %Y')}!")
-
+        st.rerun()
