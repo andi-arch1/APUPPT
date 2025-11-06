@@ -90,13 +90,20 @@ days = cal.monthdayscalendar(year, month)
 df_current = merge_reports(month, year)
 
 # Mapping status ke warna
-# Mapping status ke warna (versi kontras untuk font putih)
 def get_day_color(day):
     """Tentukan warna berdasarkan status report pada tanggal itu"""
     if day == 0:
         return None
+
+    today_date = datetime.today().date()
+    current_day = datetime(year, month, day).date()
     day_str = f"{year}-{month:02d}-{day:02d}"
     reports_today = df_current[df_current["Deadline"] == day_str]
+
+    # 🌟 Jika hari ini, tampilkan biru terang
+    if current_day == today_date:
+        return "#1976D2"  # biru terang untuk current date
+
     if len(reports_today) == 0:
         return "#2C2C2C"  # abu tua (tidak ada report)
     elif all(reports_today["Status"] == "Completed"):
@@ -135,12 +142,14 @@ for week in days:
 # Tambah legenda warna di bawah kalender
 st.markdown("""
 <div style='display:flex; gap:15px; margin-top:10px'>
+  <div style='background-color:#1976D2; width:20px; height:20px; border-radius:4px; display:inline-block'></div> Today
   <div style='background-color:#D32F2F; width:20px; height:20px; border-radius:4px; display:inline-block'></div> Not Started
   <div style='background-color:#FBC02D; width:20px; height:20px; border-radius:4px; display:inline-block'></div> In Progress
   <div style='background-color:#388E3C; width:20px; height:20px; border-radius:4px; display:inline-block'></div> Completed
   <div style='background-color:#2C2C2C; width:20px; height:20px; border-radius:4px; display:inline-block'></div> No Report
 </div>
 """, unsafe_allow_html=True)
+
 
 
 # ==== Inquiry Table ====
