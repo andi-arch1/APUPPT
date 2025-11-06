@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 import calendar
 import os
-from send_emails import send_email_notification
+from send_emails import send_email
 
 st.set_page_config(page_title="Reporting Dashboard", layout="wide")
 
@@ -201,7 +201,7 @@ with st.form("add_incidental_form"):
         df_status = pd.concat([df_status, new_entry], ignore_index=True)
         df_status.to_csv(STATUS_PATH, index=False)
         # === 🔔 Kirim Email Notifikasi ===
-        receiver = "windyvalencia123@gmail.com"  # ubah sesuai penerima kamu
+        receiver = "farrasthariq@gmail.com"  # ubah sesuai penerima kamu
         subject = f"New Incidental Report Added: {selected_report}"
         body = f"""
         <h3>📢 New Incidental Report Added</h3>
