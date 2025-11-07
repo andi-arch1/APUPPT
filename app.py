@@ -90,18 +90,30 @@ df_current = merge_reports(month, year)
 
 # ==== Color mapping ====
 def get_day_color(day):
+    """Tentukan warna berdasarkan status report pada tanggal itu dan 3 hari sebelum deadline."""
     if day == 0:
         return None
+
     day_str = f"{year}-{month:02d}-{day:02d}"
-    reports_today = df_current[df_current["Deadline"] == day_str]
-    if len(reports_today) == 0:
-        return "#2C2C2C"
-    elif all(reports_today["Status"] == "Completed"):
-        return "#388E3C"
-    elif any(reports_today["Status"] == "In Progress"):
-        return "#FBC02D"
-    else:
-        return "#D32F2F"
+    current_date = datetime(year, month, day).date()
+    color = "#2C2C2C"  # default: abu tua (no report)
+
+    for _, row in df_current.iterrows():
+        deadline_date = datetime.strptime(row["Deadline"], "%Y-%m-%d").date()
+        diff_days = (deadline_date - current_date).days
+
+        # Termasuk hari deadline dan 3 hari sebelumnya
+        if 0 <= diff_days <= 3:
+            if row["Status"] == "Completed":
+                color = "#388E3C"  # hijau
+            elif row["Status"] == "In Progress":
+                color = "#FBC02D"  # kuning
+            else:
+                color = "#D32F2F"  # merah
+            break  # kalau sudah ketemu, langsung keluar
+
+    return color
+
 
 # ==== Render calendar with blue border for today ====
 st.markdown("### 🗓️ Calendar View")
