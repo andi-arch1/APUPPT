@@ -15,7 +15,7 @@ STATUS_PATH = "data/report_status.csv"
 os.makedirs("data", exist_ok=True)
 
 # ==== Load Master ====
-df_master = pd.read_csv(REPORT_PATH)
+df_master = pd.read_csv(REPORT_PATH, sep=';')
 
 # ==== Init status file ====
 if not os.path.exists(STATUS_PATH):
