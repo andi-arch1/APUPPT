@@ -90,36 +90,30 @@ df_current = merge_reports(month, year)
 
 # ==== Color mapping ====
 def get_day_color(day):
-    """Color day based on report status and apply gradient intensity for 2 days before deadline."""
+    """Tentukan warna berdasarkan status report pada tanggal itu dan 2 hari sebelum deadline."""
     if day == 0:
         return None
 
     day_str = f"{year}-{month:02d}-{day:02d}"
     current_date = datetime(year, month, day).date()
-    base_color = "#2C2C2C"  # default gray (no report)
+    color = "#2C2C2C"  # default: abu tua (no report)
 
     for _, row in df_current.iterrows():
         deadline_date = datetime.strptime(row["Deadline"], "%Y-%m-%d").date()
         diff_days = (deadline_date - current_date).days
 
+        # Termasuk hari deadline dan 3 hari sebelumnya
         if 0 <= diff_days <= 2:
-            # pick base color based on status
             if row["Status"] == "Completed":
-                base_hex = (56, 142, 60)   # green
+                color = "#388E3C"  # hijau
             elif row["Status"] == "In Progress":
-                base_hex = (251, 192, 45)  # yellow
+                color = "#FBC02D"  # kuning
             else:
-                base_hex = (211, 47, 47)   # red
+                color = "#D32F2F"  # merah
+            break  # kalau sudah ketemu, langsung keluar
 
-            # compute gradient intensity (closer → brighter)
-            factor = 1 - (diff_days / 3)  # 0.0 → full bright, 1.0 → dim
-            r = int(base_hex[0] + (255 - base_hex[0]) * (1 - factor))
-            g = int(base_hex[1] + (255 - base_hex[1]) * (1 - factor))
-            b = int(base_hex[2] + (255 - base_hex[2]) * (1 - factor))
+    return color
 
-            return f"rgb({r},{g},{b})"
-
-    return base_color
 
 # ==== Render calendar with blue border for today ====
 st.markdown("### 🗓️ Calendar View")
