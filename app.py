@@ -90,7 +90,7 @@ df_current = merge_reports(month, year)
 
 # ==== Color mapping ====
 def get_day_color(day):
-    """Color day based on report status and apply gradient intensity for 3 days before deadline."""
+    """Color day based on report status and apply gradient intensity for 2 days before deadline."""
     if day == 0:
         return None
 
@@ -102,7 +102,7 @@ def get_day_color(day):
         deadline_date = datetime.strptime(row["Deadline"], "%Y-%m-%d").date()
         diff_days = (deadline_date - current_date).days
 
-        if 0 <= diff_days <= 3:
+        if 0 <= diff_days <= 2:
             # pick base color based on status
             if row["Status"] == "Completed":
                 base_hex = (56, 142, 60)   # green
