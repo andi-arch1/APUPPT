@@ -160,6 +160,7 @@ df_current = merge_reports(month, year)
 edited_df = st.data_editor(
     df_current,
     use_container_width=True,
+    hide_index = True,
     key="table_edit",
     disabled=["Report Name", "Month", "Year", "From Date", "Deadline", "Added By", "Added Date", "PIC"],
     column_config={
